@@ -16,14 +16,14 @@ export default {
 <style lang="scss" scoped>
     .icon{
         cursor: pointer;
-        width: 85px;
-        height: 85px;
-        border-radius: 20px;
+        width: 45px;
+        height: 45px;
+        border-radius: 9px;
         background-color: rgb(255, 255, 255);
         display: grid;
         place-items: center;
         img{
-            width: 46px;
+            width: 36px;
             height:auto;
             object-fit: cover;
         }

@@ -1,6 +1,6 @@
 <template>
   <div class="ping">
-    <Menu :mydataIcon="icon" class="menu"></Menu>
+    <Menu :bool="bool" :mydataIcon="icon" class="menu"></Menu>
     <div class="content">
       <div class="item">
         <div class="title">
@@ -10,6 +10,7 @@
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque, laudantium. Lorem ipsum dolor sit amet.</p>
           </div>
           <div class="form">
+            <form action="" method="post">
             <field :myfield="ip"></field>
             <field :myfield="sortie"></field>
             <div class="grid">
@@ -18,6 +19,11 @@
               <field :myfield="LenghtPaquet"></field>
             </div>
             <field :myfield="time"></field>
+            <div class="control">
+              <div class="resert"><span>Reinitialiser</span></div>
+              <input type="submit" value="Effectuer le ping">
+            </div>
+            </form>
           </div>
         </div>
       </div>
@@ -27,7 +33,7 @@
           <Table class="table-component" :head="pingIp.head" :tableData="pingIp.response"></Table>
         </div>
         <div class="courbe">
-
+          
         </div>
       </div>
     </div>
@@ -181,12 +187,15 @@ export default {
             ]
           }
         },
+        bool:'ping',
         icon:{
           ping:{
-            img:'ping.svg'
+            img:'ping.svg',
+            state:'pingState',
           },
           traceroute:{
-            img:'traceroute.svg'
+            img:'traceroute.svg',
+            state:'traceState',
           }
         },
         ip:{
@@ -261,13 +270,54 @@ export default {
           }
         }
         .form{
-          .field{
-            margin: .5rem 0;
-          }
-          .grid{
-            display: grid;
-            grid-template-columns: 37% 23% 37%;
-            grid-column-gap:1%;
+          form{
+            .field{
+              margin: .5rem 0;
+            }
+            .grid{
+              display: grid;
+              grid-template-columns: 37% 23% 37%;
+              grid-column-gap:1%;
+            }
+            .control{
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+              grid-column-gap: 20px;
+              margin-top: 1.5rem;
+              .resert{
+                cursor: pointer;
+                width: 100%;
+                height: 44px;
+                display: grid;
+                place-items: center;
+                background-color: whitesmoke;
+                border-radius: 7px;
+                transition: background-color 700ms ease;
+                span{
+                  font-size: 1rem;
+                  color: rgb(110, 110, 110);
+                }
+                &:hover{
+                  background-color: rgb(218, 218, 218);
+                  span{
+                    color: rgb(110, 110, 110);
+                  }
+                }
+              }
+              input{
+                cursor: pointer;
+                font-size: 1rem;
+                color:white;
+                background-color: #54b5ff;
+                outline: none;
+                border: none;
+                border-radius: 7px;
+                transition: background-color 700ms ease;
+                &:hover{
+                  background-color: #0091ff;
+                }
+              }
+            }
           }
         }
       }
@@ -275,7 +325,7 @@ export default {
         padding: .5rem;
         padding-top: 2rem;
         display: grid;
-        grid-template-rows: 60% 40%;
+        grid-template-rows: 80% 20%;
         .table{
           overflow: auto;
           &::-webkit-scrollbar{

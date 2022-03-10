@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <Menu></Menu>
+    <Menu :bool="bool"></Menu>
     <div class="wrapper">
       <div class="text">
         <h1>Faites votre choix</h1>
@@ -29,6 +29,7 @@ export default {
     },
     data(){
       return{
+        bool:'home',
           ping:{
             img:'ping.svg',
             title:'Ping',
