@@ -27,21 +27,40 @@ export default {
     .protocol{
         cursor: pointer;
         background-color:white;
-        width: 300px;
-        height: 270px;
+        width: 320px;
+        height: 290px;
         border-radius: 40px;
         padding: 1rem;
         display: grid;
         place-items: center;
+        @media (max-width:800px) {
+            width: 100%;
+            max-width: 300px;
+            height: 180px;
+            padding: 1.3rem;
+        }
         .image{
             img{
+                @media (max-width:800px) {
+                    width: 30%;
+                    height: auto;
+                }
                 width: 130px;
                 height: auto;
             }
         }
         .text{
+            @media (max-width:800px) {
+                h1{
+                    font-size: 1.7rem;
+                }
+                p{
+                    font-size: .6rem !important;
+                }
+            }
             p{
                 padding-top: .4rem;
+                font-size: .7rem;
             }
         }
     }

@@ -1,10 +1,6 @@
 <template>
-  <div class="menu">
-      <icon-image  class="about" :dataIcon="about"></icon-image>
-      <icon-image class="moon" :dataIcon="moon"></icon-image>
-      <div ref="state" class="protocol">
-        <icon-image class="protocol-icon" v-on:click="goProtocol(index)" :key="index" v-for="(protocol,index) in mydataIcon" :dataIcon="protocol"></icon-image>
-      </div>
+  <div ref="menu" class="menu">
+      <icon-image v-on:dark="handle()" :el="index" :bool="bool" :class="index" :key="index" v-for="(icon,index) in icon" :dataIcon="icon"></icon-image>
   </div>
 </template>
 
@@ -18,47 +14,66 @@ export default {
     props:{
         mydataIcon:Object,
         bool:String,
-
     },
     mounted(){
-        if(this.bool=='ping'){
-            this.addPingState()
-        }
-        if(this.bool=='trace'){
-            this.addTraceState()
-        }
+        this.handleMenu()
     },
     data(){
         return{
-            moon:{
-                img:'moon.svg'
+            verif:false,
+            icon:{
+                ping:{
+                name:'ping',
+                img:'ping.svg',
+                state:'pingState',
+                },
+                traceroute:{
+                name:'trace',
+                img:'traceroute.svg',
+                state:'traceState',
+                },
+                moon:{
+                name:'moon',
+                img:'moon.svg',
+                moonImg:'moon.svg',
+                sunImg:'sun.svg',
+                },
+                about:{
+                name:'about',
+                img:'about.svg',
+                state:'aboutState',
+                },
             },
-            sun:{
-                img:'sun.svg'
-            },
-            about:{
-                img:'about.svg'
-            }
         }
     },
     methods:{
-        goProtocol(i){
-            if(i=='ping'){
-                this.$router.push('/ping')
-            }
-            else{
-                this.$router.push('/trace-route')
-            }
-            console.log(i)
+        handleMenu(){
+            this.bus.on('MENU',()=>{
+                if(this.verif==false){
+                    this.$refs.menu.style.transform='translateX(0px)';
+                    this.$refs.menu.style.boxShadow='0px 0px 10px rgb(143, 143, 143)'
+                    this.verif=true
+                }else{
+                    this.$refs.menu.style.transform='translateX(-65px)';
+                    this.$refs.menu.style.boxShadow='initial'
+                    this.verif=false
+                }
+            })
         },
-        addPingState(){
-            console.log(this.mydataIcon)
-            this.$refs.state.classList.add(this.mydataIcon.ping.state)
-            this.$refs.state.classList.remove(this.mydataIcon.traceroute.state)
+        handle(){
+            if(this.verif==false){
+                this.Dark()
+            }else{
+                this.light()
+            }
         },
-        addTraceState(){
-            this.$refs.state.classList.add(this.mydataIcon.traceroute.state)
-            this.$refs.state.classList.remove(this.mydataIcon.ping.state)
+        Dark(){
+            this.icon.moon.img=this.icon.moon.sunImg
+            this.verif=true
+        },
+        light(){
+            this.icon.moon.img=this.icon.moon.moonImg
+            this.verif=false
         }
     }
 }
@@ -66,62 +81,42 @@ export default {
 
 <style lang="scss" scoped>
     .menu{
+        @media (max-width:800px) {
+            transform: translateX(-65px);
+            transition: transform 1s ease-out;
+            // box-shadow: 0px 0px 10px rgb(143, 143, 143);
+        }
         background-color:whitesmoke;
         height: 100%;
         width: 65px;
         position: absolute;
         left: 0;
-        display: grid;
-        grid-template-rows: auto;
         justify-items: center;
         padding-top: 1rem;
         padding-bottom: 1rem;
-        margin-left: 1rem;
         .about{
             position: absolute;
             bottom: 10px;
-            transition: background-color 700ms ease;
+            left: 0;
+            right:0;
             &:hover{
             background-color: rgb(240, 239, 239);
-        }
+            }
         }
         .moon{
             position: absolute;
-            bottom:110px;
-            transition: background-color 700ms ease;
+            bottom:65px;
+            left: 0;
+            right:0;
             &:hover{
             background-color: rgb(240, 239, 239);
-        }
-        }
-        .protocol{
-            .protocol-icon{
-                transition: background-color 700ms ease;
-                &:hover{
-                    background-color: rgb(240, 239, 239)    ;
-                }
             }
         }
-    }
-    .pingState{
-        .protocol-icon{
-            &:first-child{
-                background-color: #e0f2ff;
-                margin-bottom: 15px;
-                &:hover{
-                    background-color: #cfe8fa;
-                }       
+        .ping{
+            @media (max-width:800px) {
+                margin-top: 30px;
             }
-        }
-    }
-    .traceState{
-        .protocol-icon{
-            &:last-child{
-                background-color: #e0f2ff;
-                margin-top: 15px;
-                &:hover{
-                    background-color: #cfe8fa;
-                }       
-            }
+            margin-bottom: 10px;
         }
     }
 </style>

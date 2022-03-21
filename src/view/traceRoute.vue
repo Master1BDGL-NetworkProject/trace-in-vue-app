@@ -1,40 +1,18 @@
 <template>
   <div class="trace">
+    <burger></burger>
     <Menu :bool="bool" :mydataIcon="icon" class="menu"></Menu>
     <div class="content">
       <div class="item">
         <div class="title">
-          <h1>Traceroute</h1>
-          <div class="info">
-            <img src="../assets/idea.svg">
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque, laudantium. Lorem ipsum dolor sit amet.</p>
-          </div>
+          <info :infoData="traceIp.info"></info>
           <div class="form">
-            <form action="" method="post">
-            <field :myfield="formdata.ip"></field>
-            <div class="grid">
-              <field :myfield="formdata.houblons"></field>
-              <div class="select">
-                <label for="protocol" v-text="formdata.protocol.label"></label>
-                <select name="protocol" id="protocol">
-                  <option :key="index" v-for="(protocol,index) in formdata.protocol.data" :value="protocol" v-text="protocol"></option>
-                </select>
-              </div>
-            </div>
-            <field :myfield="formdata.time"></field>
-            <div class="control">
-              <div class="resert"><span>Reinitialiser</span></div>
-              <input type="submit" value="Effectuer le ping">
-            </div>
-            </form>
+            <trace-form></trace-form>
           </div>
         </div>
       </div>
       <div class="graph">
-        <div class="table">
-          <p>Traceroute:<span v-text="traceIp.ip"></span></p>
-          <Table class="table-component" :head="traceIp.head" :tableData="traceIp.response"></Table>
-        </div>
+        <!-- <Table class="table" :head="traceIp.head" :tableData="traceIp.response"></Table> -->
         <div class="courbe">
 
         </div>
@@ -44,25 +22,39 @@
 </template>
 
 <script>
-import field from '../components/field.vue'
 import Menu from '../components/Menu.vue'
-import Table from '../components/Table.vue'
+// import Table from '../components/Table.vue'
+import traceForm from '../components/traceForm.vue'
+import info from '../components/info.vue'
+import burger from '../components/burger.vue'
 export default {
   name:'traceRoute',
   components:{
-    field,
+    traceForm,
     Menu,
-    Table
+    // Table,
+    info,
+    burger
   },
   data(){
     return{
       traceIp:{
         ip:'172.032.067.225',
+        info:{
+          title:'Traceroute',
+          text:"Traceroute permet de connaitre de l'iteneraire empreinté par un paquet pour atteindre sa destination. Il troouvera les differentes machines intermediaire du cicuit"
+        },
         head:{
+          title:{
+            ip:'172.032.067.225',
+            p:'Traceroute:',
+          },
+          data:{
             seq:'Seq',
-            bits:'Bits',
-            ttl:'TTL',
-            time:'Temps(ms)'
+            host:'Host',
+            time1:'Time1(ms)',
+            time2:'Time2(ms)'
+          }
         },
         response:{
           data:[
@@ -110,27 +102,6 @@ export default {
           state:'traceState',
         }
       },
-      formdata:{
-        ip:{
-          label:'Adresse IP/ Host',
-          placeholder:'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
-        },
-        houblons:{
-          label:'N° houblons',
-          placeholder:'Lorem ipsum dolor sit amet.',
-        },
-        protocol:{
-          label:'Protocol',
-          data:{
-            icmp:'Icmp',
-            udp:'Udp'
-          }
-        },
-        time:{
-          label:'Temps mort',
-          placeholder:'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
-        },
-      }
     }
   },
 }
@@ -140,142 +111,47 @@ export default {
 .trace{
   position: relative;
   height: 100vh;
+  min-width:800px;
+  @media (max-width:800px) {
+    min-width: 320px;
+  }
   .menu{
     position: absolute;
     left: 0;
     background-color: white;
     border-right: 10px solid whitesmoke;
     margin-left: 0;
+    @media (max-width:800px) {
+      border-right:initial;
+    }
   }
   .content{
-      padding-left: 115px;
+      padding-left: 85px;
       display: grid;
       grid-template-columns: 55% 45%;
+      @media (max-width:800px) {
+        grid-template-columns:1fr;
+        grid-template-rows:1fr 1fr;
+        padding-left:0px;
+      }
       .item{
         padding: 0.5rem;
         padding-top: 2.5rem;
         .title{
           width: 100%;
-          h1{
-            text-align:left;
-          }
-          .info{
-            margin-top: .7rem;
-            margin-bottom: .9rem;
-            display: grid;
-            grid-template-columns: auto 1fr;
-            grid-column-gap: 15px;
-            background-color: #fff5c5;
-            padding: .7rem;
-            img{
-              width: 60px;
-              height: auto;
-              object-fit: cover;
-            }
-            p{
-              align-self: center;
-              text-align: left;
-            }
-          }
         }     
       }
       .graph{
         padding: .5rem;
         padding-top: 2rem;
         display: grid;
-        grid-template-rows: 80% 20%;
+        grid-template-rows: 100% 0%;
         .table{
           overflow: auto;
           &::-webkit-scrollbar{
             display: none;
           }
           scrollbar-width:none;
-          p{
-            background-color: #54b5ff;
-            padding: 8px;
-            text-align: left;
-            border-radius: 5px;
-            color: white;
-            font-weight: 600;
-          }
-        }
-        .table-component{
-          margin-top: 1rem;
-        }
-      }
-      .form{
-        form{
-          .field{
-            margin: .5rem 0;
-          }
-          .grid{
-            display: grid;
-            grid-template-columns: 70% 28%;
-            grid-column-gap:2%;
-            .select{
-              display: grid;
-              // grid-template-rows: auto 1fr;
-              width: 100%;
-              height: 100%;
-              label{
-                align-self: end;
-                justify-self: start;
-                margin-bottom: .2rem;
-                color: #b5d6f1;
-                font-size: .9rem;
-              }
-              #protocol{
-                outline: none;
-                border: 1px solid #46a9eb;
-                width: 100%;
-                height: 50px;
-                border-radius: 5px;
-                padding-left: 5px;
-                padding-right: 5px;
-                font-size: .9rem;
-                color: rgb(110, 110, 110);
-              }
-            }
-          }
-          .control{
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-column-gap: 20px;
-            margin-top: 1.5rem;
-            .resert{
-              cursor: pointer;
-              width: 100%;
-              height: 44px;
-              display: grid;
-              place-items: center;
-              background-color: whitesmoke;
-              border-radius: 7px;
-              transition: background-color 700ms ease;
-              span{
-                font-size: 1rem;
-                color: rgb(110, 110, 110);
-              }
-              &:hover{
-                background-color: rgb(218, 218, 218);
-                span{
-                  color: rgb(110, 110, 110);
-                }
-              }
-            }
-            input{
-              cursor: pointer;
-              font-size: 1rem;
-              color:white;
-              background-color: #54b5ff;
-              outline: none;
-              border: none;
-              border-radius: 7px;
-              transition: background-color 700ms ease;
-              &:hover{
-                background-color: #0091ff;
-              }
-            }
-          }
         }
       }
   } 
