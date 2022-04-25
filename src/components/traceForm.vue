@@ -1,17 +1,17 @@
 <template>
   <div class="traceForm">
-      <form>
-            <field :myfield="formdata.ip"></field>
+      <form method="post" @submit.prevent="handleSubmit">
+            <field :myfield="fieldData.ip"></field>
             <div class="grid">
-              <field :myfield="formdata.houblons"></field>
+              <field :myfield="fieldData.houblons"></field>
               <div class="select">
-                <label for="protocol" v-text="formdata.protocol.label"></label>
+                <label for="protocol" v-text="fieldData.protocol.label"></label>
                 <select name="protocol" id="protocol">
-                  <option :key="index" v-for="(protocol,index) in formdata.protocol.data" :value="protocol" v-text="protocol"></option>
+                  <option :key="index" v-for="(protocol,index) in fieldData.protocol.data" :value="protocol" v-text="protocol"></option>
                 </select>
               </div>
             </div>
-            <field :myfield="formdata.time"></field>
+            <field :myfield="fieldData.time"></field>
             <div class="control">
               <btn :type="item.type" :data="item.label" :class="item.label" :key="index" v-for="(item,index) in btn"></btn>
             </div>
@@ -38,27 +38,73 @@ data(){
                 type:'submit'
             },
         ],
-        formdata:{
+        fieldData:{
             ip:{
+                name:'ip',
                 label:'Adresse IP/ Host',
                 placeholder:'Ex: google.com, 127.009.192.224',
+                errorText:'Entrer une adresse/IP valide',
+                isValid:true,
+                validator:function(e){
+                    const regexAdresseIp=/([0-9]{1,3}\.){3}[0-9]{1,3}/i
+                    const regexHostName=/[\w.]+\.[a-zA-Z]{2,}/i
+                    if(regexAdresseIp.exec(e.trim())!=null  || regexHostName.exec(e.trim())!=null){
+                        return true
+                    }
+                    return false
+                }
             },
             houblons:{
+                name:'houblons',
                 label:'N° houblons',
                 placeholder:'Ex:30',
+                errorText:'Entrer le nombre de houblons',
+                isValid:true,
+                validator:function(e){
+                    if(e!=undefined && e!=''){
+                        return !isNaN(new Number(e));
+                    }
+                    return false
+                }
             },
             protocol:{
+                name:"protocol",
                 label:'Protocol',
                 data:{
                 icmp:'Icmp',
                 udp:'Udp'
-                }
+                },
             },
             time:{
+                name:"time",
                 label:'Temps mort',
                 placeholder:'Temps mort en seconde(s)',
+                errorText:'Entrer un temps mort valide',
+                isValid:true,
+                validator:function(e){
+                    if(e!=undefined && e!=''){
+                        return !isNaN(new Number(e));
+                    }
+                    return false
+                }
             },
         }
+    }
+},
+methods:{
+    handleSubmit(e){
+        let {ip,houblons,protocol,time}=e.target
+        let fields=[
+            ip,houblons,time
+        ]
+        console.log(protocol)
+        fields.forEach((field)=>{
+            const _isValid =this.fieldData[field.name].validator(field.value);
+            this.fieldData[field.name].isValid=_isValid;
+            if(field.name=='houblons'&& !_isValid){
+                protocol.style.marginBottom='1.19rem'
+            }
+        })
     }
 }
 }

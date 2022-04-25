@@ -1,6 +1,6 @@
 <template>
   <div class="pingForm">
-      <form @submit.prevent="handleSubmit">
+      <form method="post" @submit.prevent="handleSubmit">
           <field :myfield="fieldData.ip"></field>
             <div class="grid">
               <field :myfield="fieldData.numberPaquet"></field>
@@ -57,7 +57,10 @@ data(){
                 errorText:'Entrer le nombre de paquet valide',
                 isValid:true,
                 validator:function(e){
-                    return !isNaN(new Number(e));
+                    if(e!=undefined && e!=''){
+                        return !isNaN(new Number(e));
+                    }
+                    return false
                 }
             },
             ttl:{
@@ -67,7 +70,10 @@ data(){
                 errorText:'Entrer un ttl valide',
                 isValid:true,
                 validator:function(e){
-                    return !isNaN(new Number(e));
+                    if(e!=undefined && e!=''){
+                        return !isNaN(new Number(e));
+                    }
+                    return false
                 }
             },
             LenghtPaquet:{
@@ -77,7 +83,10 @@ data(){
                 errorText:'Entrer la taille du paquet valide',
                 isValid:true,
                 validator:function(e){
-                    return !isNaN(new Number(e));
+                    if(e!=undefined && e!=''){
+                        return !isNaN(new Number(e));
+                    }
+                    return false
                 }
             },
             time:{
@@ -87,7 +96,10 @@ data(){
                 errorText:'Entrer un temps mort valide',
                 isValid:true,
                 validator:function(e){
-                    return !isNaN(new Number(e));
+                    if(e!=undefined && e!=''){
+                        return !isNaN(new Number(e));
+                    }
+                    return false
                 }
             },
         }
@@ -101,6 +113,7 @@ methods:{
         ]
         fields.forEach((field)=>{
             const _isValid =this.fieldData[field.name].validator(field.value);
+            console.log(this.fieldData[field.name],_isValid)
             this.fieldData[field.name].isValid=_isValid;
         })
     }
