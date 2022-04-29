@@ -7,11 +7,11 @@
               </td>
           </tr>
           <tbody>
-            <tr :key="index" v-for="(row,index) in tableData.data" ref="item">
+            <tr :style="(index%2==0) ?'background-color:whitesmoke;' : '' " :key="index" v-for="(row,index) in tableData.data" ref="item">
                 <td :key="index" v-for="(data,index) in row" v-text="data">
                 </td>
             </tr>
-          </tbody>
+        </tbody>
       </table>
   </div>
 </template>
@@ -26,27 +26,38 @@ export default {
     data(){
         return{
             dataLength:this.tableData.data.length
-            ,
-            traceRoute:{
-                head:{
-                    seq:'Seq',
-                    bits:'Bits',
-                    ttl:'TTL',
-                    time:'Temps(ms)'
-                }
-            }
         }
     },
-    mounted(){this.peer()},
+    mounted(){
+        // this.peer()
+    },
+    watch:{
+        dataLength(){
+            console.log('k')
+            // this.peer()
+        }
+    },
     methods:{
         peer(){
+            console.log('k')
             for (let i =0; i < this.dataLength; i++) {
                 const _mod =i % 2 
                 if(_mod==0){
-                    this.$refs.item[i].style.backgroundColor='whitesmoke'
+                    this.$nextTick(()=>{
+                        this.$refs.item[i].style.backgroundColor='whitesmoke'
+                    })
                 }
-                // console.log(this.$refs.item[i])
             }
+            // this.$nextTick(()=>{
+            //     let array=this.$refs.item
+            //     for (let i = 0; i < array.length; i++) {
+            //         const element = array[i];
+            //         const mod=i%2
+            //         if(mod==0){
+            //             element.style.backgroundColor='whitesmoke'
+            //         }
+            //     }
+            // })
         }
     }
 }

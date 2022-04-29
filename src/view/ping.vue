@@ -48,138 +48,19 @@ export default {
           },
           head:{
             title:{
-              ip:'172.032.067.225',
+              ip:'172.009.192.224',
               p:'Ping:',
             },
             data:{
-              seq:'Seq',
-              bits:'Bits',
-              ttl:'TTL',
-              time:'Time(ms)'
+              // seq:'Seq',
+              // bits:'Bits',
+              // ttl:'TTL',
+              // time:'Time(ms)'
             }
           },
           response:{
             data:[
-              {
-                seq:'3',
-                bits:'8',
-                ttl:'7',
-                time:'10', 
-              },
-              {
-                seq:'3',
-                bits:'8',
-                ttl:'7',
-                time:'10', 
-              },
-              {
-                seq:'4',
-                bits:'10',
-                ttl:'8',
-                time:'10', 
-              },
-              {
-                seq:'4',
-                bits:'10',
-                ttl:'8',
-                time:'10', 
-              },
-              {
-                seq:'4',
-                bits:'10',
-                ttl:'8',
-                time:'10', 
-              },
-              {
-                seq:'3',
-                bits:'8',
-                ttl:'7',
-                time:'10', 
-              },
-              {
-                seq:'3',
-                bits:'8',
-                ttl:'7',
-                time:'10', 
-              },
-              {
-                seq:'3',
-                bits:'8',
-                ttl:'7',
-                time:'10', 
-              },
-              {
-                seq:'3',
-                bits:'8',
-                ttl:'7',
-                time:'10', 
-              },
-              {
-                seq:'3',
-                bits:'8',
-                ttl:'7',
-                time:'10', 
-              },
-              {
-                seq:'3',
-                bits:'8',
-                ttl:'7',
-                time:'10', 
-              },
-              {
-                seq:'3',
-                bits:'8',
-                ttl:'7',
-                time:'10', 
-              },
-              {
-                seq:'3',
-                bits:'8',
-                ttl:'7',
-                time:'10', 
-              },
-              {
-                seq:'3',
-                bits:'8',
-                ttl:'7',
-                time:'10', 
-              },
-              {
-                seq:'3',
-                bits:'8',
-                ttl:'7',
-                time:'10', 
-              },
-              {
-                seq:'3',
-                bits:'8',
-                ttl:'7',
-                time:'10', 
-              },
-              {
-                seq:'3',
-                bits:'8',
-                ttl:'7',
-                time:'10', 
-              },
-              {
-                seq:'3',
-                bits:'8',
-                ttl:'7',
-                time:'10', 
-              },
-              {
-                seq:'3',
-                bits:'8',
-                ttl:'7',
-                time:'10', 
-              },
-              {
-                seq:'3',
-                bits:'8',
-                ttl:'7',
-                time:'10', 
-              },
+
             ]
           }
         },
@@ -195,6 +76,27 @@ export default {
           }
         },
       }
+    },
+    created(){
+      this.bus.on('sendPingData',(data)=>{
+        console.log(data)
+        this.pingIp.head.title.ip=data.ip
+        this.pingIp.head.data ={
+          seq:'Seq',
+          bits:'Bits',
+          ttl:'TTL',
+          time:'Time(ms)'
+        }
+         let _data=data.map((pingInfo)=>{
+          return {seq:pingInfo.sequenceNo,
+            bits:pingInfo.bits,
+            ttl:pingInfo.ttl,
+            time:pingInfo.time,
+          }
+        })
+        this.pingIp.response.data=_data
+        console.log(this.pingIp.response.data)
+      })
     }
 }
 </script>
@@ -237,7 +139,7 @@ export default {
         padding: .5rem;
         padding-top: 2rem;
         display: grid;
-        grid-template-rows: 80% 20%;
+        // grid-template-rows: 80% 20%;
         .table{
           overflow:auto;
           &::-webkit-scrollbar{

@@ -13,7 +13,7 @@
             </div>
             <field :myfield="fieldData.time"></field>
             <div class="control">
-              <btn :type="item.type" :data="item.label" :class="item.label" :key="index" v-for="(item,index) in btn"></btn>
+              <btn :type="item.type" :state="item.loading" :data="item.label" :class="item.label" :key="index" v-for="(item,index) in btn"></btn>
             </div>
       </form>
   </div>
@@ -22,6 +22,7 @@
 <script>
 import field from '../components/field.vue'
 import btn from '../components/btn.vue'
+import {ApiHelpers,ApiParameter} from '../api/apiHelpers'
 export default {
 name:'traceForm',
 components:{
@@ -71,8 +72,8 @@ data(){
                 name:"protocol",
                 label:'Protocol',
                 data:{
-                icmp:'Icmp',
-                udp:'Udp'
+                icmp:'icmp',
+                udp:'udp'
                 },
             },
             time:{
@@ -92,19 +93,26 @@ data(){
     }
 },
 methods:{
-    handleSubmit(e){
+    async handleSubmit(e){
         let {ip,houblons,protocol,time}=e.target
         let fields=[
             ip,houblons,time
         ]
-        console.log(protocol)
+        let _isValid; 
         fields.forEach((field)=>{
-            const _isValid =this.fieldData[field.name].validator(field.value);
+            _isValid =this.fieldData[field.name].validator(field.value);
             this.fieldData[field.name].isValid=_isValid;
             if(field.name=='houblons'&& !_isValid){
                 protocol.style.marginBottom='1.19rem'
             }
         })
+        if(_isValid){
+            this.btn[1].loading=true;
+        }
+        let query= ApiParameter.traceRouteParameter(ip.value,houblons.value,time.value,protocol.value)
+        let data=await ApiHelpers.getTraceRouteInfo(query)
+        this.bus.emit('sendTraceData',{data:data,ip:ip.value})
+        this.btn[1].loading=false;
     }
 }
 }

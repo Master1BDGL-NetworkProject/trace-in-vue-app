@@ -9,7 +9,7 @@
             </div>
             <field :myfield="fieldData.time"></field>
             <div class="control">
-              <btn :type="item.type" :data="item.label" :class="item.label" :key="index" v-for="(item,index) in btn"></btn>
+              <btn :type="item.type" :state="item.loading" :data="item.label" :class="item.label" :key="index" v-for="(item,index) in btn"></btn>
             </div>
       </form>
   </div>
@@ -18,6 +18,7 @@
 <script>
 import field from '../components/field.vue'
 import btn from '../components/btn.vue'
+import {ApiHelpers,ApiParameter} from '../api/apiHelpers'
 export default {
 name:'pingForm',
 components:{
@@ -28,10 +29,10 @@ data(){
     return{
         btn:[
             {   label:'Reinitialiser',
-                type:'reset'
+                type:'reset',
             },
             {   label:'Effectuer',
-                type:'submit'
+                type:'submit',
             },
         ],
         fieldData:{
@@ -106,16 +107,23 @@ data(){
     }
 },
 methods:{
-    handleSubmit(e){
+    async handleSubmit(e){
         let {ip,time,LenghtPaquet,ttl,numberPaquet}=e.target
         let fields=[
             ip,time,LenghtPaquet,ttl,numberPaquet
         ]
+        let _isValid;
         fields.forEach((field)=>{
-            const _isValid =this.fieldData[field.name].validator(field.value);
-            console.log(this.fieldData[field.name],_isValid)
+            _isValid =this.fieldData[field.name].validator(field.value);
             this.fieldData[field.name].isValid=_isValid;
         })
+        if(_isValid){
+            this.btn[1].loading=true;
+        }
+        let query= ApiParameter.pingParameter(ip.value,numberPaquet.value,LenghtPaquet.value,ttl.value,time.value)
+        let data=await ApiHelpers.getPingInfo(query)
+        this.bus.emit('sendPingData',{data:data,ip:ip.value})
+        this.btn[1].loading=false;
     }
 }
 }

@@ -1,5 +1,8 @@
 <template>
-    <input class="btn" :type="type" :value="data">
+    <div class="btn">
+        <input v-if="!state" :type="type" :value="data">
+        <img v-if="state" src="../assets/loading.gif" alt="">
+    </div>
 </template>
 
 <script>
@@ -10,34 +13,52 @@ export default {
         type:{
             type:String,
             required:true
-        }
+        },
+        state:Boolean,
     }
 }
 </script>
 
 <style lang='scss' scoped>
 .btn{
-    cursor: pointer;
     width: 100%;
     height: 44px;
-    background-color: whitesmoke;
-    border-radius: 7px;
     transition: background-color 700ms ease;
-    border: none;
-    outline: none;
-    text-align: center;
+    input{
+        border: none;
+        outline: none;
+        text-align: center;
+        width: 100%;
+        height: 100%;
+        background-color: transparent;
+    }
+    img{
+        margin-top: 0.5rem;
+        object-fit: cover;
+        width: 60px;
+        height: auto;
+    }
 }
 .Reinitialiser{
+    cursor: pointer;
+    background-color: whitesmoke;
+    border-radius: 7px;
+    input{
+        font-size: 1.2rem;
+    }
     &:hover{
         background-color: rgb(218, 218, 218);
         color: rgb(110, 110, 110);
     }
 }
-    .Effectuer{
+.Effectuer{
     cursor: pointer;
     background-color: #54b5ff;
     border-radius: 7px;
-    color: white;
+    input{
+        font-size: 1.2rem;
+        color: white;
+    }
     &:hover{
         background-color: #0091ff;
     }

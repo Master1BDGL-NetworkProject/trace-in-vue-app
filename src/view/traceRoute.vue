@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="graph">
-        <!-- <Table class="table" :head="traceIp.head" :tableData="traceIp.response"></Table> -->
+        <Table  class="table" :head="traceIp.head" :tableData="traceIp.response"></Table>
         <div class="courbe">
 
         </div>
@@ -23,7 +23,7 @@
 
 <script>
 import Menu from '../components/Menu.vue'
-// import Table from '../components/Table.vue'
+import Table from '../components/Table.vue'
 import traceForm from '../components/traceForm.vue'
 import info from '../components/info.vue'
 import burger from '../components/burger.vue'
@@ -32,12 +32,13 @@ export default {
   components:{
     traceForm,
     Menu,
-    // Table,
+    Table,
     info,
     burger
   },
   data(){
     return{
+      viewtable:false,
       traceIp:{
         ip:'172.032.067.225',
         info:{
@@ -46,48 +47,18 @@ export default {
         },
         head:{
           title:{
-            ip:'172.032.067.225',
+            ip:'172.009.192.224',
             p:'Traceroute:',
           },
           data:{
-            seq:'Seq',
-            host:'Host',
-            time1:'Time1(ms)',
-            time2:'Time2(ms)'
+            // seq:'Seq',
+            // host:'Host',
+            // time1:'Time1(ms)',
+            // time2:'Time2(ms)'
           }
         },
         response:{
           data:[
-            {
-              seq:'3',
-              bits:'8',
-              ttl:'7',
-              time:'10', 
-            },
-            {
-              seq:'4',
-              bits:'10',
-              ttl:'8',
-              time:'10', 
-            },
-            {
-              seq:'4',
-              bits:'10',
-              ttl:'8',
-              time:'10', 
-            },
-            {
-              seq:'4',
-              bits:'10',
-              ttl:'8',
-              time:'10', 
-            },
-            {
-              seq:'4',
-              bits:'10',
-              ttl:'8',
-              time:'10', 
-            },
           ]
         },
       },
@@ -104,6 +75,26 @@ export default {
       },
     }
   },
+  created(){
+    this.bus.on('sendTraceData',(data)=>{
+      let i=1;
+      this.traceIp.head.title.ip=data.ip
+      this.traceIp.head.data={
+        seq:'Seq',
+        host:'Host',
+        time1:'Time1(ms)',
+        time2:'Time2(ms)'
+      }
+      this.traceIp.response.data=data.data.map((traceInfo)=>{
+        i++
+        return {seq:i-1,
+          host:traceInfo.hopsIpAdress,
+          time1:traceInfo.packetTime[0],
+          time2:traceInfo.packetTime[1],
+        }
+      })
+    })
+  }
 }
 </script>
 
@@ -145,7 +136,7 @@ export default {
         padding: .5rem;
         padding-top: 2rem;
         display: grid;
-        grid-template-rows: 100% 0%;
+        // grid-template-rows: 100% 0%;
         .table{
           overflow: auto;
           &::-webkit-scrollbar{
