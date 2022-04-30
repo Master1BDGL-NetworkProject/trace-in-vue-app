@@ -29,22 +29,18 @@ export default {
     }
   },
   async created(){
-    let response= await fetch('faceboook.com')
-    console.log(response)
-    this.internet=response.ok
+    this.checkInternet()
   },
   mounted(){
+    this.checkInternet()
     this.handleModal()
     this.outsideClick()
     this.close()
   },
   methods:{
     async checkInternet(){
-      let response= await fetch('facebook.com')
+      let response= await fetch('https://jsonplaceholder.typicode.com/todos/1')
       this.internet=response.ok
-      if(!this.internet){
-        location.reload();
-      }
     },
     handleModal(){
       this.bus.on('about',()=>{
