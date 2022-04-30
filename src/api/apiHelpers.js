@@ -1,13 +1,15 @@
-import axios from "axios";
 class ApiHelpers{
-    static  BASE_ULR='http://34.229.230.190:8080/'
+    static  BASE_ULR='http://34.207.127.105:8080/'
     static async getPingInfo(params) {
-        let info=await axios.get(`${this.BASE_ULR}ping?${params}`)
-        return info.data.data
+        let info=await fetch(`${this.BASE_ULR}ping?${params}`)
+        let data =(await info.json()).data
+        console.log(data)
+        return data
     }
     static async getTraceRouteInfo(params) {
-        let info=await axios.get(`${this.BASE_ULR}traceroute?${params}`)
-        return info.data.data
+        let info=await fetch(`${this.BASE_ULR}traceroute?${params}`)
+        let data =(await info.json()).data
+        return data
     }
     
 }

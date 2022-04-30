@@ -87,7 +87,7 @@ export default {
           ttl:'TTL',
           time:'Time(ms)'
         }
-         let _data=data.map((pingInfo)=>{
+         let _data=data.data.map((pingInfo)=>{
           return {seq:pingInfo.sequenceNo,
             bits:pingInfo.bits,
             ttl:pingInfo.ttl,
