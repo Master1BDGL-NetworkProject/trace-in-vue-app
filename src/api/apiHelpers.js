@@ -1,5 +1,5 @@
 class ApiHelpers{
-    static  BASE_ULR='http://34.207.127.105:8080/'
+    static  BASE_ULR='https://461f0f375f2f37.lhrtunnel.link/'
     static async getPingInfo(params) {
         let info=await fetch(`${this.BASE_ULR}ping?${params}`)
         let data =(await info.json()).data

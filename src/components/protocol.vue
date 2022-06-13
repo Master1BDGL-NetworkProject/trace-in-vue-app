@@ -40,6 +40,7 @@ export default {
             padding: 1.3rem;
         }
         .image{
+            margin-bottom:0;
             img{
                 @media (max-width:800px) {
                     width: 30%;
